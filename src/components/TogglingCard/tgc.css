@@ -1,0 +1,85 @@
+.collapsible-card {
+  background-color: #353638;
+  margin: 0 5px 20px 5px;
+  border-radius: 20px;
+  height: 10vh;
+}
+
+.collapsible-card-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: inherit;
+  font-size: 1.35em;
+  cursor: pointer;
+  /* background-color: rgb(107, 218, 74); */
+}
+
+.collapsible-card-title svg {
+  transition: ease-in-out 0.25s;
+
+  color: #ff304f;
+  margin-left: auto;
+  position: relative;
+  right: 25px;
+}
+
+.collapsible-card-title img {
+  height: inherit;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  margin-right: 20px;
+}
+
+.collapsible-card-items {
+  position: relative;
+}
+
+.hover-div {
+  display: none; /* change this */
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hover-div button {
+  width: auto;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.65em;
+  background-color: #2d2f31;
+  margin-bottom: 10px;
+  /* filter: blur(10.5px); change this */
+}
+
+.item img {
+  height: auto;
+  width: 30%;
+}
+
+.collapsible-card-item-info-container {
+  margin-left: 20px;
+}
+
+.collapsible-card-item-container {
+  display: none;
+  overflow: hidden;
+  max-height: 0;
+  background-color: #262729;
+  transition: max-height 0.35s ease-in-out;
+}
+
+.collapsible-card:hover {
+  background-color: #414346;
+}
+
+.collapsible-card-items a:hover {
+  background-color: #686868;
+}

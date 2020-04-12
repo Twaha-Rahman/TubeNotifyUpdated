@@ -1,0 +1,38 @@
+.empty-container {
+}
+
+.img-container {
+  text-align: center;
+}
+
+.empty-text {
+  text-align: center;
+  margin-top: 2.5em;
+  font-size: 2em;
+}
+
+.empty-svg {
+  text-align: center;
+  height: auto;
+  width: 90vw;
+}
+
+@media (min-width: 426px) {
+  .empty-svg {
+    width: 50vw;
+  }
+  .empty-text {
+    margin-top: 2.25em;
+    font-size: 1.75em;
+  }
+}
+
+@media (min-width: 1280px) {
+  .empty-svg {
+    width: 35vw;
+  }
+  .empty-text {
+    margin-top: 2.25em;
+    font-size: 2.5em;
+  }
+}

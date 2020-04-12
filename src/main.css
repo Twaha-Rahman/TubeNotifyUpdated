@@ -1,0 +1,59 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/roboto.ttf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('./fonts/comfortaa.ttf');
+  font-display: swap;
+}
+
+body {
+  margin: 0;
+  margin-top: 19vh;
+  background-color: #272a2d;
+  font-family: Roboto;
+}
+
+.main-body {
+  margin: 15vh 3vw 0 3vw;
+}
+
+.unselectable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+span {
+  margin: 0;
+  color: #f1eff3;
+  font-family: Roboto;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+em {
+  color: #f9a825 !important;
+}
+
+*:focus {
+  outline: none;
+}
+
+/* Styling for App.tsx starts from here */

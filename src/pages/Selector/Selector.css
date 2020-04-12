@@ -1,0 +1,42 @@
+.selector-container {
+  margin-bottom: 120px;
+}
+
+.selector-title {
+  text-align: center;
+  font-size: 1.5em;
+}
+.selector-load-more-btn {
+  width: 100%;
+}
+.selector-next-btn {
+  width: 100%;
+}
+.selector-btn-container {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.info-toggler-wrapper {
+  position: relative;
+  margin: 4.5vh 0 4.5vh 0;
+}
+
+#hover-selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#hover-selected h1 {
+  color: #28d8b5;
+}

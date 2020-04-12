@@ -1,0 +1,24 @@
+.info-card {
+  display: flex;
+
+  flex-direction: row;
+
+  border-radius: 20px;
+  background-color: #353638;
+  color: #f1eff3;
+  position: relative;
+  /* filter: blur(10.5px); */
+}
+
+.info-card img {
+  margin-right: 12px;
+  height: auto;
+  width: 30%;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.info-card h1 {
+  align-self: center;
+  font-size: 1.25em;
+}
