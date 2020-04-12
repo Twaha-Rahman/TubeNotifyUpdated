@@ -50,7 +50,7 @@
   align-items: center;
   justify-self: end;
 
-  height: 100%;
+  /* height: 100%; */
   font-size: 10.15vw;
   margin-right: 1.75vw;
 }
@@ -69,15 +69,16 @@
 
 @media (min-width: 640px) {
   .navbar {
-    height: 9.5vh;
+    height: 10vh;
   }
   .child-two {
-    font-size: 6.5vw;
+    font-size: 6vw;
   }
   .child-one {
-    font-size: 6.25vw;
+    font-size: 6vw;
   }
   .center-brand {
+    font-size: 2.5vh;
   }
 }
 
@@ -120,29 +121,21 @@
   .navbar {
     height: 12vh;
   }
-
+  .child-one,
   .child-two {
-    font-size: 4.5vw;
-  }
-  .child-one {
-    font-size: 4.5vw;
-  }
-  .center-brand {
-    font-size: 1.75vw;
+    font-size: 4vw;
   }
 }
 
 @media (min-width: 2560px) {
   .navbar {
-    height: 15vh;
-  }
-  .child-two {
-    font-size: 3.25vw;
-  }
-  .child-one {
-    font-size: 3.25vw;
+    height: 17.5vh;
   }
   .center-brand {
-    font-size: 1.3vw;
+    font-size: 1.25vw;
+  }
+  .child-one,
+  .child-two {
+    font-size: 3.5vw;
   }
 }

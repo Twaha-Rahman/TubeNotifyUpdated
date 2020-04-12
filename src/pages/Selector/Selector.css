@@ -40,3 +40,9 @@
 #hover-selected h1 {
   color: #28d8b5;
 }
+
+@media (min-width: 1024px) {
+  .selector-title {
+    font-size: 2.5vw;
+  }
+}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './AddBody.css';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faPaste } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button/Button';
 
 interface IAddBodyProps {
@@ -86,9 +86,8 @@ const AddBody: React.SFC<IAddBodyProps> = props => {
 
       <br />
       {instruction}
-      <div id="click-this" onClick={props.refToThis.submitter}>
-        <Button buttonIcon={faArrowRight} buttonMessage="Next" />
-      </div>
+
+      <Button clickHandler={props.refToThis.submitter} buttonIcon={faArrowRight} buttonMessage="Next" />
     </div>
   );
 };

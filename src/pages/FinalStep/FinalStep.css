@@ -1,8 +1,13 @@
+.final-step {
+  text-align: center;
+}
+
 .final-step div {
   /* width: calc(100% - 3vw - 25px); */
+
   border-radius: 20px;
-  padding: 20px;
-  line-height: 40px;
+  padding: 15px;
+  line-height: 35px;
   background-color: #353638;
   color: #aba6a6;
   margin-top: 45px;
@@ -12,6 +17,7 @@
 .final-step h1 {
   text-align: center;
   color: #28d8b5;
+  margin-bottom: 2.5em;
 }
 
 .final-step h4 span {
@@ -52,3 +58,15 @@
   color: #f9a825;
   padding: 0;
 } */
+
+@media (min-width: 640px) {
+  #b957563f-f3ae-41bc-84ab-fc01e4d69de7 {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  #b957563f-f3ae-41bc-84ab-fc01e4d69de7 {
+    width: 35%;
+  }
+}

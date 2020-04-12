@@ -49,7 +49,7 @@ class Delete extends React.Component<any> {
   private async queryInfoExtractor(refToDb: any, objStore: string) {
     try {
       const queries = await dbReader(refToDb, objStore);
-      // debugger;
+
       if (queries.length === 0) {
         return false;
       }
@@ -101,6 +101,7 @@ class Delete extends React.Component<any> {
         renderDeleteCards.push(
           <DeleteCard
             key={index.toString()}
+            forceUpdater={this.forceUpdate.bind(this)}
             dispatchFunction={this.props.dispatch}
             queryIndex={infoObj.queryIndex}
             channelTag={infoObj.channelTag}

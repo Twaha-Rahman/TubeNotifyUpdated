@@ -2,9 +2,30 @@
   text-align: center;
 }
 
+#fd59ce54-f850-4dfc-bc34-dd7d379d600e {
+  margin-top: 30px;
+}
+
 .error div {
   margin: 30px 0 30px 0;
   background: #353638;
   line-height: 25px;
   padding: 20px;
+  border-radius: 10px;
+}
+
+.error button {
+  margin-bottom: 10px;
+}
+
+@media (min-width: 640px) {
+  #fd59ce54-f850-4dfc-bc34-dd7d379d600e {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1280px) {
+  #fd59ce54-f850-4dfc-bc34-dd7d379d600e {
+    width: 35%;
+  }
 }

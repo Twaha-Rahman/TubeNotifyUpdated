@@ -3,7 +3,7 @@
 
   flex-direction: row;
 
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #353638;
   color: #f1eff3;
   position: relative;
@@ -14,11 +14,20 @@
   margin-right: 12px;
   height: auto;
   width: 30%;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .info-card h1 {
   align-self: center;
-  font-size: 1.25em;
+  font-size: 1em;
+}
+
+@media (min-width: 1024px) {
+  .info-card img {
+    width: 20%;
+  }
+  .info-card h1 {
+    font-size: 1.75em;
+  }
 }

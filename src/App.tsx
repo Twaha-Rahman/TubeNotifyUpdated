@@ -198,21 +198,23 @@ class App extends React.Component<any> {
       this.dbWriteHelper(refToDb, 'subscription', data);
     }
 
-    if (!this.props.store.showLoader) {
-      this.props.dispatch({
-        type: 'showLoader'
-      });
-      this.props.dispatch({
-        type: 'hideLoader'
-      });
-    } else {
-      this.props.dispatch({
-        type: 'showLoader'
-      });
-      this.props.dispatch({
-        type: 'hideLoader'
-      });
-    }
+    // if (!this.props.store.showLoader) {
+    //   this.props.dispatch({
+    //     type: 'showLoader'
+    //   });
+    //   this.props.dispatch({
+    //     type: 'hideLoader'
+    //   });
+    // } else {
+    //   this.props.dispatch({
+    //     type: 'showLoader'
+    //   });
+    //   this.props.dispatch({
+    //     type: 'hideLoader'
+    //   });
+    // }
+
+    this.forceUpdate();
   }
 
   public render() {
@@ -250,8 +252,6 @@ class App extends React.Component<any> {
 
           const indexesToRemove: any = uniqueIndex(allUnseenVideoTitles);
 
-          console.log(indexesToRemove);
-
           const uniqueAllUnseenVideoTitles = removeIndexesFromArray(allUnseenVideoTitles, indexesToRemove);
           const uniqueAllVideoThumbnailLinks = removeIndexesFromArray(allVideoThumbnailLinks, indexesToRemove);
           const uniqueAllVideoLinks = removeIndexesFromArray(allVideoLinks, indexesToRemove);
@@ -265,14 +265,14 @@ class App extends React.Component<any> {
                 if (nodes.length === 2) {
                   if (
                     nodes[0].childNodes[0].style.borderBottomLeftRadius === '' ||
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '20px'
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '10px'
                   ) {
                     nodes[0].childNodes[2].style.transform = 'rotate(180deg)';
                     console.log(nodes[0].childNodes);
 
                     nodes[0].childNodes[0].style.borderBottomLeftRadius = '0px';
                   } else {
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '20px';
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '10px';
                     nodes[0].childNodes[2].style.transform = 'rotate(0deg)';
                   }
                 }
@@ -282,12 +282,12 @@ class App extends React.Component<any> {
 
                   if (
                     nodes[0].childNodes[0].style.borderBottomLeftRadius === '' ||
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '20px'
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '10px'
                   ) {
                     nodes[0].childNodes[2].style.transform = 'rotate(180deg)';
                     nodes[0].childNodes[0].style.borderBottomLeftRadius = '0px';
                   } else {
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '20px';
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '10px';
                     nodes[0].childNodes[2].style.transform = 'rotate(0deg)';
                   }
                 }
@@ -296,12 +296,12 @@ class App extends React.Component<any> {
                   nodes = e.target.parentNode.parentNode.childNodes;
                   if (
                     nodes[0].childNodes[0].style.borderBottomLeftRadius === '' ||
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '20px'
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius === '10px'
                   ) {
                     nodes[0].childNodes[2].style.transform = 'rotate(180deg)';
                     nodes[0].childNodes[0].style.borderBottomLeftRadius = '0px';
                   } else {
-                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '20px';
+                    nodes[0].childNodes[0].style.borderBottomLeftRadius = '10px';
                     nodes[0].childNodes[2].style.transform = 'rotate(0deg)';
                   }
                 }
@@ -311,16 +311,17 @@ class App extends React.Component<any> {
                     if (className === 'collapsible-card-item-container') {
                       if (node.style.display === 'none' || node.style.display === '') {
                         node.style.display = 'block';
-                        node.style.maxHeight = `${node.scrollHeight}px`;
+                        // node.style.maxHeight = `inherit`;
                       } else {
                         node.style.display = 'none';
-                        node.style.maxHeight = null;
+                        // node.style.maxHeight = null;
                       }
                     }
                   });
                 });
               }}
               title={element.channelName}
+              forceUpdater={this.forceUpdate.bind(this)}
               items={uniqueAllUnseenVideoTitles}
               channelLogoLink={element.channelLogoLink}
               deletor={this.videoDeleter}

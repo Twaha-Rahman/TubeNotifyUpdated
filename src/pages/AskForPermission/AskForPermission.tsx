@@ -60,7 +60,7 @@ class AskForPermission extends React.Component<any> {
     return (
       <div className="notification-permission">
         <h1>Enable Notification</h1>
-        <EmptyComponent svgComponent={Logo} />
+        <Logo width="90%" height="auto" />
         <div className="notification-permission-body">
           <h2>Why do I need to enable Notification?</h2>
           <p>To deliver you with notifications according to your subscription, we need you to enable notification.</p>

@@ -13,6 +13,7 @@ interface ITogglingCardProps {
   videoLinks: string[];
   videoUploadTimes: string[];
   subscriptionPart: number;
+  forceUpdater: any;
 }
 
 const TogglingCard: React.SFC<ITogglingCardProps> = props => {
@@ -66,12 +67,27 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
             </button>
             <button
               onClick={(e: any) => {
-                const hoverDivDisplay = e.target.parentNode.parentNode.style.display;
+                const selectedNode = e.target;
+                console.log(selectedNode.tagName);
 
-                if (hoverDivDisplay === 'flex') {
-                  e.target.parentNode.parentNode.style.display = 'none';
-                  e.target.parentNode.parentNode.previousSibling.style.filter = '';
-                }
+                props.forceUpdater();
+
+                // if (selectedNode.tagName === 'BUTTON') {
+                //   e.target.parentNode.parentNode.style.dispaly = 'none';
+                // }
+
+                // if (selectedNode.tagName === 'svg') {
+                //   e.target.parentNode.parentNode.parentNode.style.dispaly = 'none';
+                // }
+
+                // if (selectedNode.tagName === 'path') {
+                //   e.target.parentNode.parentNode.parentNode.parentNode.style.dispaly = 'none';
+                // }
+
+                // if (hoverDiv === 'flex') {
+                //   e.target.parentNode.parentNode.style.display = 'none';
+                //   e.target.parentNode.parentNode.previousSibling.style.filter = '';
+                // }
               }}
             >
               <FontAwesomeIcon icon={faTimes} />

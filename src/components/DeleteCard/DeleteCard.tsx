@@ -12,6 +12,7 @@ interface IDeleteCardProps {
   channelTag: string;
   queryIndex: number;
   dispatchFunction: any;
+  forceUpdater: any;
 }
 
 const DeleteCard: React.SFC<IDeleteCardProps> = props => {
@@ -34,12 +35,7 @@ const DeleteCard: React.SFC<IDeleteCardProps> = props => {
         ref.transaction('query', 'readwrite').store.put(newChannelQuery);
       }
 
-      props.dispatchFunction({
-        type: 'showLoader'
-      });
-      props.dispatchFunction({
-        type: 'hideLoader'
-      });
+      props.forceUpdater();
     } catch (error) {
       props.dispatchFunction({
         type: `showError`

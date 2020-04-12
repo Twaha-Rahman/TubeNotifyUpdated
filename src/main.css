@@ -12,13 +12,18 @@
 
 body {
   margin: 0;
-  margin-top: 19vh;
+  overscroll-behavior: none;
   background-color: #272a2d;
   font-family: Roboto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .main-body {
-  margin: 15vh 3vw 0 3vw;
+  margin: 12.5vh 3vw 0 3vw;
 }
 
 .unselectable {
@@ -57,3 +62,21 @@ em {
 }
 
 /* Styling for App.tsx starts from here */
+
+@media (min-width: 426px) {
+  .main-body {
+    margin-top: 17.5vh;
+  }
+}
+
+@media (min-width: 640px) {
+  .main-body {
+    margin-top: 20vh;
+  }
+}
+
+@media (min-width: 2560px) {
+  .main-body {
+    margin-top: 30vh;
+  }
+}

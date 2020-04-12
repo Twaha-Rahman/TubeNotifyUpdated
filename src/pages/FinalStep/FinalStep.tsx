@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import urlBase64ToUint8Array from '../../utilities/urlBase64ToUint8Array';
 import publicVapidKey from '../../api_keys/publicVapidKey';
+import EmptyComponent from '../../components/EmptyComponent/EmptyComponent';
+import { ReactComponent as Logo } from '../../media/image/success.svg';
 
 class FinalStep extends React.Component<any> {
   constructor(props: any) {
@@ -98,14 +100,6 @@ class FinalStep extends React.Component<any> {
             type: `showError`
           });
         });
-    } else {
-      //ask for permission and then proceed with subscribing
-      // Notification.requestPermission().then(status => {
-      //   if (status === 'granted') {
-      //     // proceed with subscribing
-      //     console.log(status);
-      //   }
-      // });
     }
   }
 
@@ -145,6 +139,7 @@ class FinalStep extends React.Component<any> {
     return (
       <div className="final-step">
         <h1>Congratulations!</h1>
+        <Logo width="100%" height="auto" />
         <div className="success-info">
           <h4>
             Your subscription has been set up for the channel{' '}
