@@ -12,41 +12,61 @@ import removeIndexesFromArray from './utilities/removeIndexesFromArray';
 import EmptyComponent from './components/EmptyComponent/EmptyComponent';
 import { Redirect } from 'react-router';
 import { ReactComponent as Logo } from './media/image/empty.svg';
+import requestIdleCallbackPolyfill from './polyfills/requestIdleCallbackPolyfill';
 
 class App extends React.Component<any> {
   constructor(props: any) {
     super(props); // store and route is in the props
     this.videoDeleter = this.videoDeleter.bind(this);
 
-    if ('serviceWorker' in navigator) {
-      //sw supported
-      navigator.serviceWorker.ready.then((registration: any) => {
-        let serviceWorker;
-        if (registration.installing) {
-          serviceWorker = registration.installing;
-        } else if (registration.waiting) {
-          serviceWorker = registration.waiting;
-        } else if (registration.active) {
-          serviceWorker = registration.active;
-        }
-
-        if (serviceWorker) {
-          if (serviceWorker.state === 'activated') {
-            // If push subscription wasnt done yet have to do here
-
-            registration.pushManager.getSubscription().then((pushSubscription: any) => {
-              if (pushSubscription) {
-                this.props.dispatch({
-                  type: 'hasPermission'
-                });
-              }
-            });
-          }
-        }
+    let myWindow: any = window;
+    if ('requestIdleCallback' in window) {
+      myWindow.requestIdleCallback(() => {
+        // Do all feature detection here...
       });
+      console.log('Supported!');
     } else {
-      //sw not supported!!!
+      console.log('Unsupported!');
+      myWindow.requestIdleCallback = myWindow.requestIdleCallback || requestIdleCallbackPolyfill;
+
+      myWindow.cancelIdleCallback =
+        myWindow.cancelIdleCallback ||
+        function(id: any) {
+          clearTimeout(id);
+        };
     }
+
+    myWindow.requestIdleCallback(() => {
+      if ('serviceWorker' in navigator) {
+        //sw supported
+        navigator.serviceWorker.ready.then((registration: any) => {
+          let serviceWorker;
+          if (registration.installing) {
+            serviceWorker = registration.installing;
+          } else if (registration.waiting) {
+            serviceWorker = registration.waiting;
+          } else if (registration.active) {
+            serviceWorker = registration.active;
+          }
+
+          if (serviceWorker) {
+            if (serviceWorker.state === 'activated') {
+              // If push subscription wasnt done yet have to do here
+
+              registration.pushManager.getSubscription().then((pushSubscription: any) => {
+                if (pushSubscription) {
+                  this.props.dispatch({
+                    type: 'hasSubscription'
+                  });
+                }
+              });
+            }
+          }
+        });
+      } else {
+        //sw not supported!!!
+      }
+    });
 
     refToDb
       .then(ref => {

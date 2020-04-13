@@ -34,7 +34,7 @@ class AskForPermission extends React.Component<any> {
         })
           .then(() => {
             this.props.dispatch({
-              type: 'hasPermission'
+              type: 'hasSubscription'
             });
           })
           .catch(() => {
@@ -50,7 +50,7 @@ class AskForPermission extends React.Component<any> {
       return <Redirect to="/error" />;
     }
 
-    if (this.props.store.hasPermission) {
+    if (this.props.store.hasSubscription) {
       return <Redirect to="/final" />;
     }
 
@@ -88,7 +88,7 @@ class AskForPermission extends React.Component<any> {
                         this.pushNotificationSetter(registration);
                       } else {
                         this.props.dispatch({
-                          type: 'hasPermission'
+                          type: 'hasSubscription'
                         });
                       }
                     });

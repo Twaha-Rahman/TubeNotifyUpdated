@@ -408,7 +408,7 @@ class Selector extends React.Component<any> {
           });
         });
 
-      if (this.props.store.hasPermission) {
+      if (this.props.store.hasSubscription) {
         return <Redirect to="/final" />;
       }
 

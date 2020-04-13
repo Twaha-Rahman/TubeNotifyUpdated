@@ -13,7 +13,7 @@ import addSubscriptions from './modules/addSubscriptions';
 import addQueries from './modules/addQueries';
 import addVideoPublishDates from './modules/addVideoPublishDates';
 import addVideoIds from './modules/addVideoIds';
-import hasPermission from './modules/hasPermission';
+import hasSubscription from './modules/hasSubscription';
 
 const reducers = combineReducers({
   addAdditionalInfo,
@@ -26,7 +26,7 @@ const reducers = combineReducers({
   addVideoIds,
   addVideoPublishDates,
   currentlySelected,
-  hasPermission,
+  hasSubscription,
   errorToggler,
   requestLink,
   showLoader,
