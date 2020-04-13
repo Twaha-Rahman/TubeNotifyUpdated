@@ -9,8 +9,6 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
-const publicKey = 'BAZTDuUqEH_nPU-HKJlX8rUnriUqtNJ05BvYg4SNM7EVR47cgbDbLfD_nK3bzTDRsKTsD0zvh2KYurPMyqaI-q8';
-
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -57,56 +55,6 @@ function registerValidSW(swUrl: string) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-      // My custom code start
-
-      //
-      // let serviceWorker;
-      // if (registration.installing) {
-      //   serviceWorker = registration.installing;
-      //   // console.log('Service worker installing');
-      // } else if (registration.waiting) {
-      //   serviceWorker = registration.waiting;
-      //   // console.log('Service worker installed & waiting');
-      // } else if (registration.active) {
-      //   serviceWorker = registration.active;
-      //   // console.log('Service worker active');
-      // }
-
-      // if (serviceWorker) {
-      //   console.log('sw current state', serviceWorker.state);
-      //   if (serviceWorker.state === 'activated') {
-      //     // If push subscription wasnt done yet have to do here
-      //     console.log('sw already activated - Do watever needed here');
-      //   }
-      //   serviceWorker.addEventListener('statechange', (e: any) => {
-      //     console.log('sw statechange : ', e.target.state);
-      //     if (e.target.state === 'activated') {
-      //       // use pushManger for subscribing here.
-      //       console.log('Just now activated. now we can subscribe for push notification');
-      //       console.log('start');
-      //       registration.pushManager
-      //         .subscribe({
-      //           userVisibleOnly: true,
-      //           applicationServerKey: urlBase64ToUint8Array(publicKey)
-      //         })
-      //         .then(subscription => {
-      //           console.log(subscription);
-
-      //           fetch('api/init', {
-      //             method: 'POST',
-      //             body: JSON.stringify(subscription),
-      //             headers: {
-      //               'content-type': 'application/json'
-      //             }
-      //           });
-      //         });
-      //     }
-      //   });
-      // }
-      //
-
-      // My custom code end
-
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker) {
@@ -133,21 +81,6 @@ function registerValidSW(swUrl: string) {
       console.error('Error during service worker registration:', error);
     });
 }
-
-// function urlBase64ToUint8Array(base64String: any) {
-//   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-//   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-
-//   const rawData = window.atob(base64);
-//   const outputArray = new Uint8Array(rawData.length);
-
-//   //tslint:disable
-//   for (let i = 0; i < rawData.length; ++i) {
-//     outputArray[i] = rawData.charCodeAt(i);
-//   }
-//   console.log('end');
-//   return outputArray;
-// }
 
 function checkValidServiceWorker(swUrl: string) {
   // Check if the service worker can be found. If it can't reload the page.

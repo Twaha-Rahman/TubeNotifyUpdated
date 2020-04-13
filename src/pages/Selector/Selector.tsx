@@ -39,8 +39,6 @@ class Selector extends React.Component<any> {
   }
 
   public helper(e: any) {
-    console.log(e.target);
-
     let num = Number(e.target.id);
 
     if (e.target.tagName === 'IMG') {
@@ -48,14 +46,10 @@ class Selector extends React.Component<any> {
     }
 
     if (e.target.tagName === 'svg') {
-      // console.log('SVG detected');
-
       num = Number(e.target.parentNode.parentNode.previousSibling.id);
     }
 
     if (e.target.tagName === 'path') {
-      // console.log('PATH detected');
-
       num = Number(e.target.parentNode.parentNode.parentNode.previousSibling.id);
     }
 
@@ -66,15 +60,11 @@ class Selector extends React.Component<any> {
     if (e.target.tagName === 'H1') {
       if (e.target.id === '') {
         num = Number(e.target.parentNode.previousSibling.id);
-        // console.log(num);
       }
     }
-    // console.log(num);
 
     const numberOfCards = this.props.store.addTitles.length;
     const selectedCount = numberOfCards - num;
-
-    console.log(selectedCount);
 
     this.props.dispatch({
       type: `currentlySelected`,
@@ -85,18 +75,11 @@ class Selector extends React.Component<any> {
   public async dbReadHelper(dbRef: any, objStore: string, channelTag: string) {
     try {
       const db = await dbRef;
-      //const res = await dbReader(db, objStore);
-      /////////////////////////////
 
       const tx = db.transaction(objStore, 'readwrite');
       let data = await tx.store.get(channelTag);
-      console.log(data);
 
       return data;
-      ////////////////////////////
-      //console.log(res);
-
-      //return res;
     } catch (error) {
       this.props.dispatch({
         type: `showError`
@@ -105,8 +88,6 @@ class Selector extends React.Component<any> {
   }
 
   public async dbWriteHelper(dbRef: any, objStore: string, obj: any) {
-    console.log(await dbRef, obj);
-
     try {
       const ref = await dbRef;
       await dbWriter(ref, objStore, obj);
@@ -143,17 +124,7 @@ class Selector extends React.Component<any> {
           className="info-toggler-wrapper"
         >
           <InfoToggler isSelected={true} num={index} title={val} imgLink={addThumbnailLinks[index]} />
-          <div
-            id="hover-selected"
-            onClick={(e: any) => {
-              // console.log(e.target.parentNode.previousSibling.childNodes[1]);
-              // const ref = e.target.parentNode.previousSibling.childNodes[1];
-              // if (ref) {
-              //   ref.style.display = 'none';
-              //   e.target.parentNode.previousSibling.childNodes[0].style.filter = 'blur(0px)';
-              // }
-            }}
-          >
+          <div id="hover-selected">
             <h1>
               <FontAwesomeIcon icon={faCheck} />
               Selected
@@ -389,8 +360,6 @@ class Selector extends React.Component<any> {
                 this.dbWriteHelper(refToDb, 'query', queryToWrite);
               }
             });
-
-            console.log(oldKeyWords, newKeyWords);
           } else {
             const queryToWrite = {
               channelName: this.props.store.addAdditionalInfo.channelName,
@@ -416,8 +385,6 @@ class Selector extends React.Component<any> {
 
       const oldThumbnailLinksToKeep: any = dbReader(refToDb, 'cache-keep', 1)
         .then(res => {
-          console.log(res);
-
           let newThumbnailLinksToKeep: string[] = [];
           if (res) {
             newThumbnailLinksToKeep = [
@@ -427,8 +394,6 @@ class Selector extends React.Component<any> {
           } else {
             newThumbnailLinksToKeep = this.props.store.addThumbnailLinks.slice(this.props.store.currentlySelected * -1);
           }
-
-          console.log(newThumbnailLinksToKeep);
 
           this.dbWriteHelper(refToDb, 'cache-keep', {
             id: 1,
@@ -442,8 +407,6 @@ class Selector extends React.Component<any> {
             type: `showError`
           });
         });
-
-      console.log(oldThumbnailLinksToKeep);
 
       if (this.props.store.hasPermission) {
         return <Redirect to="/final" />;

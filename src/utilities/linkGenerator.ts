@@ -49,7 +49,6 @@ function linkGenerator(obj: ILinkGenerators) {
   for (const part of keys) {
     link += `${part}=${options[part]}&`;
   }
-  console.log(link);
 
   return link;
 }

@@ -9,6 +9,5 @@ export default function urlBase64ToUint8Array(base64String: string) {
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
-  console.log('end');
   return outputArray;
 }

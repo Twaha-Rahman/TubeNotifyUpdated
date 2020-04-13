@@ -29,19 +29,16 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
               if (e.target.parentNode.classList[0] === 'item') {
                 hoverDivRef = e.target.parentNode.parentNode.childNodes[1];
               } else {
-                console.log(e.target.parentNode.childNodes[1]);
                 hoverDivRef = e.target.parentNode.childNodes[1];
               }
             }
             if (e.target.tagName === 'H3' || e.target.tagName === 'SPAN') {
-              console.log(e.target.parentNode.parentNode.parentNode.childNodes[1]);
               hoverDivRef = e.target.parentNode.parentNode.parentNode.childNodes[1];
             }
             if (e.target.tagName === 'IMG') {
-              console.log(e.target.parentNode.parentNode.childNodes[1]);
               hoverDivRef = e.target.parentNode.parentNode.childNodes[1];
             }
-            console.log(hoverDivRef.parentNode.childNodes[0]);
+
             hoverDivRef.parentNode.childNodes[0].style.filter = 'blur(10.5px)';
             hoverDivRef.style.display = 'flex';
             window.open(props.videoLinks[index], '_blank');
@@ -68,26 +65,8 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
             <button
               onClick={(e: any) => {
                 const selectedNode = e.target;
-                console.log(selectedNode.tagName);
 
                 props.forceUpdater();
-
-                // if (selectedNode.tagName === 'BUTTON') {
-                //   e.target.parentNode.parentNode.style.dispaly = 'none';
-                // }
-
-                // if (selectedNode.tagName === 'svg') {
-                //   e.target.parentNode.parentNode.parentNode.style.dispaly = 'none';
-                // }
-
-                // if (selectedNode.tagName === 'path') {
-                //   e.target.parentNode.parentNode.parentNode.parentNode.style.dispaly = 'none';
-                // }
-
-                // if (hoverDiv === 'flex') {
-                //   e.target.parentNode.parentNode.style.display = 'none';
-                //   e.target.parentNode.parentNode.previousSibling.style.filter = '';
-                // }
               }}
             >
               <FontAwesomeIcon icon={faTimes} />

@@ -25,8 +25,6 @@ class AskForPermission extends React.Component<any> {
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
       })
       .then((subscription: any) => {
-        console.log(subscription);
-
         fetch('http://localhost:3005/api/init', {
           method: 'POST',
           body: JSON.stringify(subscription),
@@ -35,7 +33,6 @@ class AskForPermission extends React.Component<any> {
           }
         })
           .then(() => {
-            console.log("Everything went as it should've!!!");
             this.props.dispatch({
               type: 'hasPermission'
             });
@@ -72,28 +69,20 @@ class AskForPermission extends React.Component<any> {
           clickHandler={() => {
             navigator.serviceWorker.ready
               .then(registration => {
-                //////////
-
                 let serviceWorker;
                 if (registration.installing) {
                   serviceWorker = registration.installing;
-                  // console.log('Service worker installing');
                 } else if (registration.waiting) {
                   serviceWorker = registration.waiting;
-                  // console.log('Service worker installed & waiting');
                 } else if (registration.active) {
                   serviceWorker = registration.active;
-                  console.log('Service worker active');
                 }
 
                 if (serviceWorker) {
                   if (serviceWorker.state === 'activated') {
                     // If push subscription wasnt done yet have to do here
 
-                    /////////////
                     registration.pushManager.getSubscription().then(pushSubscription => {
-                      console.log(pushSubscription);
-
                       if (!pushSubscription) {
                         // user isn't subcribed to any notification
                         this.pushNotificationSetter(registration);
@@ -103,20 +92,16 @@ class AskForPermission extends React.Component<any> {
                         });
                       }
                     });
-
-                    ////////////
                   }
                   serviceWorker.addEventListener('statechange', (e: any) => {
                     console.log('sw statechange : ', e.target.state);
                     if (e.target.state === 'activated') {
                       // use pushManger for subscribing here.
-                      console.log('Just now activated. now we can subscribe for push notification');
-                      console.log('start');
+
                       this.pushNotificationSetter(registration);
                     }
                   });
                 }
-                //////////////
               })
               .catch(err => {
                 this.props.dispatch({

@@ -18,10 +18,9 @@ interface IDeleteCardProps {
 const DeleteCard: React.SFC<IDeleteCardProps> = props => {
   const keywordDeletor = async (channelTag: string, queryIndex: number, detailsIndex: number) => {
     try {
-      console.log(channelTag, queryIndex, detailsIndex);
       const ref = await refToDb;
       const channelQuery = await dbReader(refToDb, 'query', channelTag);
-      console.log(channelQuery);
+
       const newDetails: any[] = [];
       channelQuery.details.forEach((detailObj: any, index: number) => {
         if (detailsIndex !== index) {

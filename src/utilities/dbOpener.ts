@@ -2,7 +2,6 @@ import { openDB } from 'idb';
 
 const refToDb = openDB(`TubeDB`, 1, {
   upgrade(db, oldVerNum, newVerNum, tx) {
-    console.log(db, oldVerNum, newVerNum, tx);
     if (!db.objectStoreNames.contains(`subscription`)) {
       db.createObjectStore(`subscription`, {
         keyPath: `channelTag`

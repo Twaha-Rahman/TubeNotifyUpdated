@@ -55,12 +55,10 @@ class Delete extends React.Component<any> {
       }
 
       const queryInfoObjArr: IInfoObject[] = [];
-      console.log(queries);
 
       queries.forEach((query: any, queryIndex: number) => {
         let keyWords: string[][] = [];
         query.details.forEach((detailObj: IDetailsObject) => {
-          //keyWords = [...keyWords, ...detailObj.keyWords];
           keyWords.push(detailObj.keyWords);
         });
         const queryInfoObj: IInfoObject = {
@@ -72,7 +70,7 @@ class Delete extends React.Component<any> {
         };
         queryInfoObjArr.push(queryInfoObj);
       });
-      console.log(queryInfoObjArr);
+
       this.props.dispatch({
         type: 'addQueries',
         queries: queryInfoObjArr
@@ -94,8 +92,6 @@ class Delete extends React.Component<any> {
     const infoObjArr = this.props.store.addQueries;
     if (infoObjArr.length !== 0) {
       let renderDeleteCards: any[] = [];
-
-      console.log(infoObjArr);
 
       infoObjArr.forEach((infoObj: IInfoObject, index: number) => {
         renderDeleteCards.push(

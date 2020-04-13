@@ -24,10 +24,8 @@ class App extends React.Component<any> {
         let serviceWorker;
         if (registration.installing) {
           serviceWorker = registration.installing;
-          // console.log('Service worker installing');
         } else if (registration.waiting) {
           serviceWorker = registration.waiting;
-          // console.log('Service worker installed & waiting');
         } else if (registration.active) {
           serviceWorker = registration.active;
         }
@@ -36,18 +34,13 @@ class App extends React.Component<any> {
           if (serviceWorker.state === 'activated') {
             // If push subscription wasnt done yet have to do here
 
-            /////////////
             registration.pushManager.getSubscription().then((pushSubscription: any) => {
-              console.log(pushSubscription);
-
               if (pushSubscription) {
                 this.props.dispatch({
                   type: 'hasPermission'
                 });
               }
             });
-
-            ////////////
           }
         }
       });
@@ -64,7 +57,6 @@ class App extends React.Component<any> {
               subscriptions: data
             });
           } else {
-            // throw new Error('Something went wrong while reading IDB!!!');
             this.props.dispatch({
               type: `showError`
             });
@@ -94,8 +86,6 @@ class App extends React.Component<any> {
   }
 
   public async dbWriteHelper(dbRef: any, objStore: string, obj: any) {
-    console.log(await dbRef, obj);
-
     try {
       const ref = await dbRef;
       await dbWriter(ref, objStore, obj);
@@ -120,7 +110,6 @@ class App extends React.Component<any> {
   public videoDeleter(link: string, thumbnailLink: string, subscriptionPart: number) {
     const data = this.props.store.addSubscriptions[subscriptionPart];
     // const indexToDelete: any = [];
-    console.log(this.props.store.addSubscriptions[subscriptionPart].videoLinks);
 
     const toKeep: any[] = [];
 
@@ -136,8 +125,6 @@ class App extends React.Component<any> {
       });
     });
 
-    console.log(toKeep);
-
     data.unseenVideoTitles = subscriptionFilter(toKeep, data.unseenVideoTitles);
     data.videoThumbnailLinks = subscriptionFilter(toKeep, data.videoThumbnailLinks);
     data.videoLinks = subscriptionFilter(toKeep, data.videoLinks);
@@ -148,11 +135,8 @@ class App extends React.Component<any> {
         if (res) {
           let deletedCacheKeepData = res.data.filter((val: string) => {
             if (val !== thumbnailLink) {
-              console.log('b1');
-
               return true;
             } else {
-              console.log('b2');
               return false;
             }
           });
@@ -167,8 +151,6 @@ class App extends React.Component<any> {
 
     // Now the variable 'data' is the modified suscription that needs to be put in IDB
 
-    console.log(data.videoLinks);
-
     let areArraysEmpty = true;
 
     data.videoLinks.forEach((arr: string[]) => {
@@ -176,8 +158,6 @@ class App extends React.Component<any> {
         areArraysEmpty = false;
       }
     });
-
-    console.log(areArraysEmpty);
 
     if (areArraysEmpty) {
       // this.objStoreItemDeletor(refToDb, 'subscription', this.props.store.addSubscriptions[subscriptionPart].channelTag);
@@ -273,7 +253,6 @@ class App extends React.Component<any> {
                     nodes[0].childNodes[0].style.borderBottomLeftRadius === '10px'
                   ) {
                     nodes[0].childNodes[2].style.transform = 'rotate(180deg)';
-                    console.log(nodes[0].childNodes);
 
                     nodes[0].childNodes[0].style.borderBottomLeftRadius = '0px';
                   } else {

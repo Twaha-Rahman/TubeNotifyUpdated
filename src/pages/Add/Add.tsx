@@ -63,7 +63,6 @@ class Add extends React.Component<any> {
           fetch(firstLink)
             .then(firstLinkResponse => {
               firstLinkResponse.json().then(firstLinkData => {
-                console.log(firstLinkData.items[0].snippet.thumbnails.default.url);
                 const channelLogoLink = firstLinkData.items[0].snippet.thumbnails.default.url;
                 if (firstLinkData.items.length === 0) {
                   this.props.dispatch({
@@ -71,7 +70,6 @@ class Add extends React.Component<any> {
                   });
                 } else {
                   const playlistId: string = firstLinkData.items[0].contentDetails.relatedPlaylists.uploads;
-                  console.log(firstLinkData);
 
                   const secondLink = linkGenerator({
                     playlistId,
@@ -212,7 +210,6 @@ class Add extends React.Component<any> {
           source: addVideoIds,
           toCompareWith: combinedUniqueIndexes
         });
-        console.log(keepTheseVideoIds);
 
         const keepTheseVideoPublishDates: string[] = compareAndKeep({
           source: addVideoPublishDates,
