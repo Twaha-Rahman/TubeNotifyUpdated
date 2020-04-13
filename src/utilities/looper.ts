@@ -1,16 +1,13 @@
-function looper(titleOrDescription: string[], keywordsArr: string[]) {
+import matchChecker from '../utilities/matchChecker';
+
+function looper(titleOrDescriptionArr: string[], keywordsArr: string[]) {
   const indexOfMatchedArr: number[] = [];
-  titleOrDescription.forEach((partOfBig: string, index: number) => {
-    const words = partOfBig.split(` `);
-    words.forEach((word: string) => {
-      keywordsArr.forEach((keyword: string) => {
-        const lowerCasedPartOfSmall = keyword.toLowerCase();
-        const lowerCasedWord = word.toLowerCase();
-        if (lowerCasedWord === lowerCasedPartOfSmall) {
-          indexOfMatchedArr.push(index);
-        }
-      });
-    });
+  titleOrDescriptionArr.forEach((titleOrDescription: string, index: number) => {
+    const isMatching = matchChecker(titleOrDescription, keywordsArr);
+
+    if (isMatching) {
+      indexOfMatchedArr.push(index);
+    }
   });
   return indexOfMatchedArr;
 }
