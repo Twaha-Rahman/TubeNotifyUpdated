@@ -18,37 +18,42 @@ class App extends React.Component<any> {
     super(props); // store and route is in the props
     this.videoDeleter = this.videoDeleter.bind(this);
 
-    navigator.serviceWorker.ready.then((registration: any) => {
-      let serviceWorker;
-      if (registration.installing) {
-        serviceWorker = registration.installing;
-        // console.log('Service worker installing');
-      } else if (registration.waiting) {
-        serviceWorker = registration.waiting;
-        // console.log('Service worker installed & waiting');
-      } else if (registration.active) {
-        serviceWorker = registration.active;
-      }
-
-      if (serviceWorker) {
-        if (serviceWorker.state === 'activated') {
-          // If push subscription wasnt done yet have to do here
-
-          /////////////
-          registration.pushManager.getSubscription().then((pushSubscription: any) => {
-            console.log(pushSubscription);
-
-            if (pushSubscription) {
-              this.props.dispatch({
-                type: 'hasPermission'
-              });
-            }
-          });
-
-          ////////////
+    if ('serviceWorker' in navigator) {
+      //sw supported
+      navigator.serviceWorker.ready.then((registration: any) => {
+        let serviceWorker;
+        if (registration.installing) {
+          serviceWorker = registration.installing;
+          // console.log('Service worker installing');
+        } else if (registration.waiting) {
+          serviceWorker = registration.waiting;
+          // console.log('Service worker installed & waiting');
+        } else if (registration.active) {
+          serviceWorker = registration.active;
         }
-      }
-    });
+
+        if (serviceWorker) {
+          if (serviceWorker.state === 'activated') {
+            // If push subscription wasnt done yet have to do here
+
+            /////////////
+            registration.pushManager.getSubscription().then((pushSubscription: any) => {
+              console.log(pushSubscription);
+
+              if (pushSubscription) {
+                this.props.dispatch({
+                  type: 'hasPermission'
+                });
+              }
+            });
+
+            ////////////
+          }
+        }
+      });
+    } else {
+      //sw not supported!!!
+    }
 
     refToDb
       .then(ref => {

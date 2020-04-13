@@ -187,11 +187,8 @@ class Selector extends React.Component<any> {
               }`;
 
               try {
-                const secondLinkData = await (await fetch(newLink)).json();
-                console.log(secondLinkData);
-
-                // const lookedUpToThisVideoTag =
-                //   secondLinkData.items[secondLinkData.items.length - 1].snippet.resourceId.videoId;
+                const unparsedData = await fetch(newLink);
+                const secondLinkData = await unparsedData.json();
 
                 const descriptions: string[] = [];
                 const thumbnailLinks: string[] = [];
@@ -235,12 +232,12 @@ class Selector extends React.Component<any> {
                   source: thumbnailLinks,
                   toCompareWith: combinedUniqueIndexes
                 });
-
-                // const keepTheseVideoIds: string[] = compareAndKeep({
-                //   source: videoIds,
-                //   toCompareWith: combinedUniqueIndexes
-                // });
-
+                /////////////////////////////////////////////////////////
+                const keepTheseVideoIds: string[] = compareAndKeep({
+                  source: videoIds,
+                  toCompareWith: combinedUniqueIndexes
+                });
+                /////////////////////////////////////////////////////////
                 const keepTheseVideoUploadTime: string[] = compareAndKeep({
                   source: videoUploadTime,
                   toCompareWith: combinedUniqueIndexes
@@ -249,13 +246,6 @@ class Selector extends React.Component<any> {
                 this.props.dispatch({
                   type: 'eraseCurrentlySelected'
                 });
-
-                // this.props.dispatch({
-                //   type: 'updateAdditionalInfo',
-                //   action: {
-                //     lookedUpToThisVideoTag: lookedUpToThisVideoTag
-                //   }
-                // });
 
                 multipleStoreCommits({
                   refToDispatcher: this.props.dispatch,
@@ -280,12 +270,12 @@ class Selector extends React.Component<any> {
                   link: this.props.store.requestLink.link,
                   nextPageToken: secondLinkData.nextPageToken
                 });
-
-                // this.props.dispatch({
-                //   type: 'addVideoIds',
-                //   videoIds: keepTheseVideoIds
-                // });
-
+                ///////////////////////////////////////////////
+                this.props.dispatch({
+                  type: 'addVideoIds',
+                  videoIds: keepTheseVideoIds
+                });
+                //////////////////////////////////////////////////
                 this.props.dispatch({
                   type: 'addVideoPublishDates',
                   dates: keepTheseVideoUploadTime
@@ -304,15 +294,6 @@ class Selector extends React.Component<any> {
     );
 
     if (this.props.store.stepCounter === 4) {
-      const newTagArray = this.props.store.addVideoIds;
-
-      this.props.dispatch({
-        type: 'updateAdditionalInfo',
-        action: {
-          lookedUpToThisVideoTag: newTagArray[0]
-        }
-      });
-
       this.props.dispatch({
         type: `stepInc`
       });
@@ -465,7 +446,7 @@ class Selector extends React.Component<any> {
       console.log(oldThumbnailLinksToKeep);
 
       if (this.props.store.hasPermission) {
-        return <Redirect to="/selector" />;
+        return <Redirect to="/final" />;
       }
 
       return <Redirect to="/ask" />;

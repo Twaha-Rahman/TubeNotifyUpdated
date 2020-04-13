@@ -20,26 +20,6 @@ class Add extends React.Component<any> {
     });
   }
 
-  public componentDidMount() {
-    // const refToButton: any = document.getElementsByClassName('input-button');
-    // const refToInputField: any = document.getElementById('input');
-    // refToInputField.addEventListener('keyup', (event: any) => {
-    //   if (event.keyCode === 13) {
-    //     event.preventDefault();
-    //     refToButton[0].click();
-    //   }
-    // });
-    // if (this.props.store.stepCounter === 2) {
-    //   const refToInputFieldForKeyWord: any = document.getElementsByClassName('input-key-word')[0];
-    //   refToInputFieldForKeyWord.addEventListener('keyup', (event: any) => {
-    //     if (event.keyCode === 13) {
-    //       event.preventDefault();
-    //       refToButton[0].click();
-    //     }
-    //   });
-    // }
-  }
-
   public componentWillUnmount() {
     if (this.props.store.stepCounter !== 3) {
       this.props.dispatch({
@@ -102,16 +82,7 @@ class Add extends React.Component<any> {
                   fetch(secondLink)
                     .then(secondLinkResponse => {
                       secondLinkResponse.json().then(secondLinkData => {
-                        console.log(secondLinkData);
-
-                        // const lookedUpToThisVideoTag =
-                        //   secondLinkData.items[secondLinkData.items.length - 1].snippet.resourceId.videoId;
-
-                        const lookedUpToThisVideoTagArray: string[] = [];
-
-                        secondLinkData.items.forEach((element: any) => {
-                          lookedUpToThisVideoTagArray.push(element.snippet.resourceId.videoId);
-                        });
+                        const lookedUpToThisVideoTag = secondLinkData.items[0].snippet.resourceId.videoId;
 
                         this.props.dispatch({
                           type: 'addAdditionalInfo',
@@ -120,8 +91,7 @@ class Add extends React.Component<any> {
                             channelTag: secondLinkData.items[0].snippet.channelId,
                             channelLogoLink: channelLogoLink,
                             playlistID: secondLinkData.items[0].snippet.playlistId,
-                            // lookedUpToThisVideoTag: lookedUpToThisVideoTag,
-                            tagArray: lookedUpToThisVideoTagArray
+                            lookedUpToThisVideoTag: lookedUpToThisVideoTag
                           }
                         });
                         const videoInfoArray = secondLinkData.items;
@@ -237,10 +207,14 @@ class Add extends React.Component<any> {
           source: addThumbnailLinks,
           toCompareWith: combinedUniqueIndexes
         });
-        // const keepTheseVideoIds: string[] = compareAndKeep({
-        //   source: addVideoIds,
-        //   toCompareWith: combinedUniqueIndexes
-        // });
+        /////////////////////
+        const keepTheseVideoIds: string[] = compareAndKeep({
+          source: addVideoIds,
+          toCompareWith: combinedUniqueIndexes
+        });
+        console.log(keepTheseVideoIds);
+
+        ///////////////////
         const keepTheseVideoPublishDates: string[] = compareAndKeep({
           source: addVideoPublishDates,
           toCompareWith: combinedUniqueIndexes
@@ -265,12 +239,17 @@ class Add extends React.Component<any> {
           commitName: `ThumbnailLink`,
           arrayToCommit: keepTheseThumbnailLinks
         });
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // this.props.dispatch({
+        //   type: 'addVideoIds',
+        //   videoIds: addVideoIds
+        // });
 
         this.props.dispatch({
           type: 'addVideoIds',
-          videoIds: addVideoIds
+          videoIds: keepTheseVideoIds
         });
-
+        /////////////////////////////////////////////////////////////////////////////////////////////
         this.props.dispatch({
           type: 'addVideoPublishDates',
           dates: keepTheseVideoPublishDates
@@ -285,6 +264,9 @@ class Add extends React.Component<any> {
 
   public render() {
     let renderThis;
+    if (this.props.store.errorToggler) {
+      renderThis = <Redirect to="/error" />;
+    }
     if (this.props.store.showLoader) {
       renderThis = <Loading />;
     }
@@ -312,10 +294,6 @@ class Add extends React.Component<any> {
 
     if (this.props.store.stepCounter === 3) {
       renderThis = <Redirect to="/selector" />;
-    }
-
-    if (this.props.store.errorToggler) {
-      renderThis = <Redirect to="/error" />;
     }
 
     return renderThis;
