@@ -111,7 +111,7 @@ class Add extends React.Component<any> {
 
                         const publishDates: string[] = [];
 
-                        videoPublishDates.forEach(videoPublishDate => {
+                        videoPublishDates.forEach((videoPublishDate: string) => {
                           const date = videoPublishDate.substring(0, 10);
                           publishDates.push(date);
                         });
@@ -189,7 +189,7 @@ class Add extends React.Component<any> {
         trimmedSubscriptionWords.forEach(keyword => {
           this.props.dispatch({ keyword, type: 'addKeyword' });
         });
-
+        // all the checking happens here...
         const indexByTitle = looper(addTitles, trimmedSubscriptionWords);
         const indexByDescription = looper(addDescriptions, trimmedSubscriptionWords);
         const uniqueIndexByTitle = [...new Set(indexByTitle)];
@@ -207,14 +207,13 @@ class Add extends React.Component<any> {
           source: addThumbnailLinks,
           toCompareWith: combinedUniqueIndexes
         });
-        /////////////////////
+
         const keepTheseVideoIds: string[] = compareAndKeep({
           source: addVideoIds,
           toCompareWith: combinedUniqueIndexes
         });
         console.log(keepTheseVideoIds);
 
-        ///////////////////
         const keepTheseVideoPublishDates: string[] = compareAndKeep({
           source: addVideoPublishDates,
           toCompareWith: combinedUniqueIndexes
@@ -239,17 +238,12 @@ class Add extends React.Component<any> {
           commitName: `ThumbnailLink`,
           arrayToCommit: keepTheseThumbnailLinks
         });
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // this.props.dispatch({
-        //   type: 'addVideoIds',
-        //   videoIds: addVideoIds
-        // });
 
         this.props.dispatch({
           type: 'addVideoIds',
           videoIds: keepTheseVideoIds
         });
-        /////////////////////////////////////////////////////////////////////////////////////////////
+
         this.props.dispatch({
           type: 'addVideoPublishDates',
           dates: keepTheseVideoPublishDates

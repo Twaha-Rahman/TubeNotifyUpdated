@@ -1,18 +1,18 @@
-function looper(toLoopBig: string[], toLoopSmall: string[]) {
-  const indexOfMatched: number[] = [];
-  toLoopBig.forEach((partOfBig: string, index: number) => {
+function looper(titleOrDescription: string[], keywordsArr: string[]) {
+  const indexOfMatchedArr: number[] = [];
+  titleOrDescription.forEach((partOfBig: string, index: number) => {
     const words = partOfBig.split(` `);
     words.forEach((word: string) => {
-      toLoopSmall.forEach((partOfSmall: string) => {
-        const lowerCasedPartOfSmall = partOfSmall.toLocaleLowerCase();
-        const lowerCasedWord = word.toLocaleLowerCase();
+      keywordsArr.forEach((keyword: string) => {
+        const lowerCasedPartOfSmall = keyword.toLowerCase();
+        const lowerCasedWord = word.toLowerCase();
         if (lowerCasedWord === lowerCasedPartOfSmall) {
-          indexOfMatched.push(index);
+          indexOfMatchedArr.push(index);
         }
       });
     });
   });
-  return indexOfMatched;
+  return indexOfMatchedArr;
 }
 
 export default looper;
