@@ -12,12 +12,19 @@ import removeIndexesFromArray from './utilities/removeIndexesFromArray';
 import EmptyComponent from './components/EmptyComponent/EmptyComponent';
 import { Redirect } from 'react-router';
 import { ReactComponent as Logo } from './media/image/empty.svg';
-import requestIdleCallbackPolyfill from './polyfills/requestIdleCallbackPolyfill';
+import requestIdleCallbackPolyfill from './polyfills/requestIdleCallback/requestIdleCallbackPolyfill';
+import cancelIdleCallback from './polyfills/requestIdleCallback/cancelIdleCallback';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import linkGenerator from './utilities/linkGenerator';
+import looper from './utilities/looper';
+import compareAndKeep from './utilities/compareAndKeep';
 
 class App extends React.Component<any> {
   constructor(props: any) {
     super(props); // store and route is in the props
     this.videoDeleter = this.videoDeleter.bind(this);
+    this.reloadSubscriptions = this.reloadSubscriptions.bind(this);
 
     let myWindow: any = window;
     if ('requestIdleCallback' in window) {
@@ -29,11 +36,7 @@ class App extends React.Component<any> {
       console.log('Unsupported!');
       myWindow.requestIdleCallback = myWindow.requestIdleCallback || requestIdleCallbackPolyfill;
 
-      myWindow.cancelIdleCallback =
-        myWindow.cancelIdleCallback ||
-        function(id: any) {
-          clearTimeout(id);
-        };
+      myWindow.cancelIdleCallback = myWindow.cancelIdleCallback || cancelIdleCallback;
     }
 
     myWindow.requestIdleCallback(() => {
@@ -103,6 +106,77 @@ class App extends React.Component<any> {
     this.props.dispatch({
       type: 'eraseSubscriptions'
     });
+  }
+
+  public async reloadSubscriptions() {
+    const allQueries = await dbReader(refToDb, 'query');
+    for (const query of allQueries) {
+      const { playlistId, details } = query;
+      const link = linkGenerator({
+        playlistId,
+        type: `playlistItems`,
+        maxResults: 50,
+        part: `snippet`
+      });
+      const unparsedData = await fetch(link);
+      const data = await unparsedData.json();
+
+      console.log(data);
+
+      details.forEach((detailObj: any) => {
+        const { lookedUpToThisVideoTag, keyWords } = detailObj;
+
+        let keepChecking = true;
+        const titlesToProcess: string[] = [];
+        const descriptionsToProcess: string[] = [];
+        const videoPublishDatesToProcess: string[] = [];
+        const thumbnailLinksToProcess: string[] = [];
+        const videosIdsToProcess: string[] = [];
+        data.items.forEach((item: any) => {
+          if (item.snippet.resourceId.videoId === lookedUpToThisVideoTag) {
+            keepChecking = false;
+          }
+          if (keepChecking) {
+            titlesToProcess.push(item.snippet.title);
+            descriptionsToProcess.push(item.snippet.title);
+            videoPublishDatesToProcess.push(item.snippet.title);
+            thumbnailLinksToProcess.push(item.snippet.title);
+            videosIdsToProcess.push(item.snippet.title);
+          }
+        });
+
+        const indexByTitle = looper(titlesToProcess, keyWords);
+
+        const indexByDescription = looper(descriptionsToProcess, keyWords);
+
+        const combinedUniqueIndexes = [...new Set([...indexByTitle, ...indexByDescription])];
+
+        const keepTheseTitles: string[] = compareAndKeep({
+          source: titlesToProcess,
+          toCompareWith: combinedUniqueIndexes
+        });
+        const keepTheseDescriptions: string[] = compareAndKeep({
+          source: descriptionsToProcess,
+          toCompareWith: combinedUniqueIndexes
+        });
+        const keepTheseThumbnailLinks: string[] = compareAndKeep({
+          source: thumbnailLinksToProcess,
+          toCompareWith: combinedUniqueIndexes
+        });
+
+        const keepTheseVideoIds: string[] = compareAndKeep({
+          source: videosIdsToProcess,
+          toCompareWith: combinedUniqueIndexes
+        });
+
+        const keepTheseVideoPublishDates: string[] = compareAndKeep({
+          source: videoPublishDatesToProcess,
+          toCompareWith: combinedUniqueIndexes
+        });
+
+        console.log(keepTheseDescriptions, combinedUniqueIndexes);
+      });
+    }
   }
 
   public async dbWriteHelper(dbRef: any, objStore: string, obj: any) {
@@ -202,22 +276,6 @@ class App extends React.Component<any> {
     } else {
       this.dbWriteHelper(refToDb, 'subscription', data);
     }
-
-    // if (!this.props.store.showLoader) {
-    //   this.props.dispatch({
-    //     type: 'showLoader'
-    //   });
-    //   this.props.dispatch({
-    //     type: 'hideLoader'
-    //   });
-    // } else {
-    //   this.props.dispatch({
-    //     type: 'showLoader'
-    //   });
-    //   this.props.dispatch({
-    //     type: 'hideLoader'
-    //   });
-    // }
 
     this.forceUpdate();
   }
@@ -337,7 +395,14 @@ class App extends React.Component<any> {
             />
           );
         });
-        return renderThis;
+        return (
+          <div>
+            {renderThis}
+            <button id="reload-subscriptions" onClick={this.reloadSubscriptions}>
+              <FontAwesomeIcon icon={faSyncAlt} className="rotate" />
+            </button>
+          </div>
+        );
       }
     }
 

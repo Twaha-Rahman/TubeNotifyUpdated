@@ -63,6 +63,35 @@ em {
 
 /* Styling for App.tsx starts from here */
 
+#reload-subscriptions {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  border-radius: 50%;
+  width: initial;
+  padding: 10px;
+}
+
+#reload-subscriptions svg {
+  width: 5vw;
+  height: auto;
+}
+
+.rotate {
+  animation: rotation 1.75s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+/* Styling for App.tsx ends from here */
+
 @media (min-width: 426px) {
   .main-body {
     margin-top: 17.5vh;
