@@ -21,10 +21,16 @@ import Loading from '../../components/Loading/Loading';
 class Selector extends React.Component<any> {
   constructor(props: any) {
     super(props); // store and route is in the props
+    this.props.dispatch({
+      type: `hideLoader`
+    });
     this.helper = this.helper.bind(this);
     this.dbWriteHelper = this.dbWriteHelper.bind(this);
     this.dbReadHelper = this.dbReadHelper.bind(this);
+    this.loadMoreHandler = this.loadMoreHandler.bind(this);
+    this.nextButtonHandler = this.nextButtonHandler.bind(this);
   }
+
   public componentWillUnmount() {
     this.props.dispatch({
       type: `clearStep`
@@ -98,7 +104,141 @@ class Selector extends React.Component<any> {
     }
   }
 
+  public async loadMoreHandler() {
+    this.props.dispatch({
+      type: `showLoader`
+    });
+
+    console.log('clicked load more btn....................................................');
+
+    const newLink: string = `${this.props.store.requestLink.link}pageToken=${
+      this.props.store.requestLink.nextPageToken
+    }`;
+
+    console.log(newLink);
+
+    try {
+      const unparsedData = await fetch(newLink);
+      const secondLinkData = await unparsedData.json();
+
+      const descriptions: string[] = [];
+      const thumbnailLinks: string[] = [];
+      const titles: string[] = [];
+      const videoIds: string[] = [];
+      const videoUploadTime: string[] = [];
+
+      const videoInfoArray = secondLinkData.items;
+      videoInfoArray.forEach((response: any) => {
+        titles.push(response.snippet.title);
+        descriptions.push(response.snippet.description);
+        thumbnailLinks.push(response.snippet.thumbnails.medium.url);
+        videoIds.push(response.snippet.resourceId.videoId);
+
+        const date = response.snippet.publishedAt.substring(0, 10);
+        videoUploadTime.push(date);
+      });
+
+      const keywords = this.props.store.addKeyword;
+      const matchedTitlesIndex = looper(titles, keywords);
+      const matchedDescriptionsIndex = looper(descriptions, keywords);
+      const uniqueMatchedTitlesIndex = [...new Set(matchedTitlesIndex)];
+      const uniqueMatchedDescriptionsIndex = [...new Set(matchedDescriptionsIndex)];
+      const combinedUniqueIndexes = [...new Set([...uniqueMatchedTitlesIndex, ...uniqueMatchedDescriptionsIndex])];
+
+      const keepTheseTitles: string[] = compareAndKeep({
+        source: titles,
+        toCompareWith: combinedUniqueIndexes
+      });
+      const keepTheseDescriptions: string[] = compareAndKeep({
+        source: descriptions,
+        toCompareWith: combinedUniqueIndexes
+      });
+      const keepTheseThumbnailLinks: string[] = compareAndKeep({
+        source: thumbnailLinks,
+        toCompareWith: combinedUniqueIndexes
+      });
+
+      const keepTheseVideoIds: string[] = compareAndKeep({
+        source: videoIds,
+        toCompareWith: combinedUniqueIndexes
+      });
+
+      const keepTheseVideoUploadTime: string[] = compareAndKeep({
+        source: videoUploadTime,
+        toCompareWith: combinedUniqueIndexes
+      });
+
+      this.props.dispatch({
+        type: 'eraseCurrentlySelected'
+      });
+
+      multipleStoreCommits({
+        refToDispatcher: this.props.dispatch,
+        commitName: `Title`,
+        arrayToCommit: keepTheseTitles
+      });
+
+      multipleStoreCommits({
+        refToDispatcher: this.props.dispatch,
+        commitName: `Description`,
+        arrayToCommit: keepTheseDescriptions
+      });
+
+      multipleStoreCommits({
+        refToDispatcher: this.props.dispatch,
+        commitName: `ThumbnailLink`,
+        arrayToCommit: keepTheseThumbnailLinks
+      });
+
+      this.props.dispatch({
+        type: 'requestLink',
+        link: this.props.store.requestLink.link,
+        nextPageToken: secondLinkData.nextPageToken
+      });
+
+      this.props.dispatch({
+        type: 'addVideoIds',
+        videoIds: keepTheseVideoIds
+      });
+
+      this.props.dispatch({
+        type: 'addVideoPublishDates',
+        dates: keepTheseVideoUploadTime
+      });
+
+      this.props.dispatch({
+        type: `hideLoader`
+      });
+    } catch (error) {
+      console.log(error);
+
+      this.props.dispatch({
+        type: `showError`
+      });
+    }
+  }
+
+  public nextButtonHandler() {
+    if (this.props.store.currentlySelected > 0) {
+      this.props.dispatch({
+        type: `stepInc`
+      });
+    } else {
+      alert('Please select atleast one video');
+    }
+  }
+
   public render() {
+    let render: any;
+
+    if (this.props.store.errorToggler) {
+      return <Redirect to="/error" />;
+    }
+
+    if (this.props.store.showLoader) {
+      return <Loading />;
+    }
+
     const { addTitles, addThumbnailLinks, currentlySelected } = this.props.store;
     const unselected: number = addTitles.length - currentlySelected - 1;
     const renderThis = addTitles.map((val: string, index: number) => {
@@ -134,128 +274,15 @@ class Selector extends React.Component<any> {
       );
     });
 
-    const render = (
+    render = (
       <div className="selector-container">
         <h1 className="selector-title">Select the video you have watched recently :</h1>
 
         {renderThis}
         <div className="selector-btn-container">
-          <span
-            className="selector-next-btn"
-            onClick={() => {
-              this.props.dispatch({
-                type: `stepInc`
-              });
-            }}
-          >
-            <Button expadedButton={true} buttonMessage="Next" buttonIcon={faArrowRight} />
-          </span>
-          <span
-            className="selector-load-more-btn"
-            onClick={async () => {
-              const newLink: string = `${this.props.store.requestLink.link}pageToken=${
-                this.props.store.requestLink.nextPageToken
-              }`;
+          <Button clickHandler={this.nextButtonHandler} buttonMessage="Next" buttonIcon={faArrowRight} />
 
-              try {
-                const unparsedData = await fetch(newLink);
-                const secondLinkData = await unparsedData.json();
-
-                const descriptions: string[] = [];
-                const thumbnailLinks: string[] = [];
-                const titles: string[] = [];
-                const videoIds: string[] = [];
-                const videoUploadTime: string[] = [];
-
-                const videoInfoArray = secondLinkData.items;
-                videoInfoArray.forEach((response: any) => {
-                  titles.push(response.snippet.title);
-                  descriptions.push(response.snippet.description);
-                  thumbnailLinks.push(response.snippet.thumbnails.medium.url);
-                  videoIds.push(response.snippet.resourceId.videoId);
-
-                  const date = response.snippet.publishedAt.substring(0, 10);
-                  videoUploadTime.push(date);
-                });
-
-                const keywords = this.props.store.addKeyword;
-                const matchedTitlesIndex = looper(titles, keywords);
-                const matchedDescriptionsIndex = looper(descriptions, keywords);
-                const uniqueMatchedTitlesIndex = [...new Set(matchedTitlesIndex)];
-                const uniqueMatchedDescriptionsIndex = [...new Set(matchedDescriptionsIndex)];
-                const combinedUniqueIndexes = [
-                  ...new Set([...uniqueMatchedTitlesIndex, ...uniqueMatchedDescriptionsIndex])
-                ];
-
-                const keepTheseTitles: string[] = compareAndKeep({
-                  source: titles,
-                  toCompareWith: combinedUniqueIndexes
-                });
-                const keepTheseDescriptions: string[] = compareAndKeep({
-                  source: descriptions,
-                  toCompareWith: combinedUniqueIndexes
-                });
-                const keepTheseThumbnailLinks: string[] = compareAndKeep({
-                  source: thumbnailLinks,
-                  toCompareWith: combinedUniqueIndexes
-                });
-
-                const keepTheseVideoIds: string[] = compareAndKeep({
-                  source: videoIds,
-                  toCompareWith: combinedUniqueIndexes
-                });
-
-                const keepTheseVideoUploadTime: string[] = compareAndKeep({
-                  source: videoUploadTime,
-                  toCompareWith: combinedUniqueIndexes
-                });
-
-                this.props.dispatch({
-                  type: 'eraseCurrentlySelected'
-                });
-
-                multipleStoreCommits({
-                  refToDispatcher: this.props.dispatch,
-                  commitName: `Title`,
-                  arrayToCommit: keepTheseTitles
-                });
-
-                multipleStoreCommits({
-                  refToDispatcher: this.props.dispatch,
-                  commitName: `Description`,
-                  arrayToCommit: keepTheseDescriptions
-                });
-
-                multipleStoreCommits({
-                  refToDispatcher: this.props.dispatch,
-                  commitName: `ThumbnailLink`,
-                  arrayToCommit: keepTheseThumbnailLinks
-                });
-
-                this.props.dispatch({
-                  type: 'requestLink',
-                  link: this.props.store.requestLink.link,
-                  nextPageToken: secondLinkData.nextPageToken
-                });
-
-                this.props.dispatch({
-                  type: 'addVideoIds',
-                  videoIds: keepTheseVideoIds
-                });
-
-                this.props.dispatch({
-                  type: 'addVideoPublishDates',
-                  dates: keepTheseVideoUploadTime
-                });
-              } catch (error) {
-                this.props.dispatch({
-                  type: `showError`
-                });
-              }
-            }}
-          >
-            <Button expadedButton={true} buttonMessage="Load More" buttonIcon={faAngleDoubleDown} />
-          </span>
+          <Button clickHandler={this.loadMoreHandler} buttonMessage="Load More" buttonIcon={faAngleDoubleDown} />
         </div>
       </div>
     );

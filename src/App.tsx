@@ -31,9 +31,9 @@ class App extends React.Component<any> {
       myWindow.requestIdleCallback(() => {
         // Do all feature detection here...
       });
-      console.log('Supported!');
+
     } else {
-      console.log('Unsupported!');
+
       myWindow.requestIdleCallback = myWindow.requestIdleCallback || requestIdleCallbackPolyfill;
 
       myWindow.cancelIdleCallback = myWindow.cancelIdleCallback || cancelIdleCallback;
@@ -123,7 +123,7 @@ class App extends React.Component<any> {
 
     const allQueries = await dbReader(refToDb, 'query');
 
-    const newSubscriptionForMultipleChannels: any = [];
+    const newSubscriptionForMultipleChannels: string[][][][] = [];
     
 
     for (const query of allQueries) {
@@ -208,16 +208,8 @@ class App extends React.Component<any> {
         });
 
         newSubscriptions.push([keepTheseTitles, videoLinks, keepTheseVideoPublishDates, keepTheseThumbnailLinks]);
-        // change each inner array with the below mentioned variables----
-        //keepTheseTitles
+        // newSubscriptions.push([['sas', 'sdd'], ['sas', 'sdd'], ['sas', 'sdd'], ['sas', 'sdd']]);
 
-        //videoLinks
-        //keepTheseVideoPublishDates
-        //keepTheseThumbnailLinks
-
-
-
-        
       });
 
       newSubscriptionForMultipleChannels.push(newSubscriptions);
@@ -234,20 +226,29 @@ class App extends React.Component<any> {
     const allSubscriptions = await dbReader(refToDb, 'subscription');
 
     allSubscriptions.forEach((channelSubscriptionObj: any, channelSubscriptionObjIndex: number) => {
+      if (newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][0][0].length === 0) {
+
+          
+        return;
+      }
       channelSubscriptionObj.unseenVideoTitles.forEach((titleArr: string[], titleArrIndex: number) => {
+        
         titleArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][titleArrIndex][0]);
         
       });
       channelSubscriptionObj.videoLinks.forEach((videoLinkArr: string[], videoLinkArrIndex: number) => {
+       
         videoLinkArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoLinkArrIndex][1]);
         
       });
 
       channelSubscriptionObj.videoUploadTime.forEach((videoUploadTimeArr: string[], videoUploadTimeIndex: number) => {
+        
         videoUploadTimeArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoUploadTimeIndex][2]);
         
       });
       channelSubscriptionObj.videoThumbnailLinks.forEach((videoThumbnailLinksArr: string[], videoThumbnailLinksArrIndex: number) => {
+        
         videoThumbnailLinksArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoThumbnailLinksArrIndex][3]);
         
       });

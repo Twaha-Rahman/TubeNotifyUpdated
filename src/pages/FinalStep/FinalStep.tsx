@@ -83,7 +83,7 @@ class FinalStep extends React.Component<any> {
         </div>
 
         <Router.Link to="/">
-          <Button expadedButton={true} buttonMessage="Finish" buttonIcon={faCheck} />
+          <Button buttonMessage="Finish" buttonIcon={faCheck} />
         </Router.Link>
       </div>
     );

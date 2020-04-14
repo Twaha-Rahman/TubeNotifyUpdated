@@ -11,10 +11,6 @@ button {
   color: #e5e5e5;
 }
 
-.expanded-button {
-  width: 100%;
-}
-
 .btn-logo {
   margin-left: 20px;
   color: inherit !important;
