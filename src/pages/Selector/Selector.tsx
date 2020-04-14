@@ -173,15 +173,11 @@ class Selector extends React.Component<any> {
                   descriptions.push(response.snippet.description);
                   thumbnailLinks.push(response.snippet.thumbnails.medium.url);
                   videoIds.push(response.snippet.resourceId.videoId);
-                  // response.snippet.publishedAt.forEach((videoPublishDate: string) => {
-                  //   const date = videoPublishDate.substring(0, 10);
-                  //   videoUploadTime.push(date);
-                  // });
+
                   const date = response.snippet.publishedAt.substring(0, 10);
                   videoUploadTime.push(date);
                 });
 
-                ///////////
                 const keywords = this.props.store.addKeyword;
                 const matchedTitlesIndex = looper(titles, keywords);
                 const matchedDescriptionsIndex = looper(descriptions, keywords);
@@ -203,12 +199,12 @@ class Selector extends React.Component<any> {
                   source: thumbnailLinks,
                   toCompareWith: combinedUniqueIndexes
                 });
-                /////////////////////////////////////////////////////////
+
                 const keepTheseVideoIds: string[] = compareAndKeep({
                   source: videoIds,
                   toCompareWith: combinedUniqueIndexes
                 });
-                /////////////////////////////////////////////////////////
+
                 const keepTheseVideoUploadTime: string[] = compareAndKeep({
                   source: videoUploadTime,
                   toCompareWith: combinedUniqueIndexes
@@ -241,12 +237,12 @@ class Selector extends React.Component<any> {
                   link: this.props.store.requestLink.link,
                   nextPageToken: secondLinkData.nextPageToken
                 });
-                ///////////////////////////////////////////////
+
                 this.props.dispatch({
                   type: 'addVideoIds',
                   videoIds: keepTheseVideoIds
                 });
-                //////////////////////////////////////////////////
+
                 this.props.dispatch({
                   type: 'addVideoPublishDates',
                   dates: keepTheseVideoUploadTime

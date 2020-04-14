@@ -109,9 +109,28 @@ class App extends React.Component<any> {
   }
 
   public async reloadSubscriptions() {
+
+    try {
+      
+    } catch (error) {
+      
+    }
+
+    const reloadSvg:(SVGElement | any) = document.querySelector('#reload-subscriptions')?.childNodes[0];
+
+    reloadSvg.classList.add('rotate');
+    
+
     const allQueries = await dbReader(refToDb, 'query');
+
+    const newSubscriptionForMultipleChannels: any = [];
+    
+
     for (const query of allQueries) {
       const { playlistId, details } = query;
+
+      const newSubscriptions: string[][][] = [];
+
       const link = linkGenerator({
         playlistId,
         type: `playlistItems`,
@@ -122,9 +141,13 @@ class App extends React.Component<any> {
       const data = await unparsedData.json();
 
       console.log(data);
+      const newLookedUpToThisVideoTag: string = data.items[0].snippet.resourceId.videoId;
+      const newDetailsArr: any[] = [];
 
       details.forEach((detailObj: any) => {
         const { lookedUpToThisVideoTag, keyWords } = detailObj;
+
+        newDetailsArr.push({ lookedUpToThisVideoTag: newLookedUpToThisVideoTag, keyWords });
 
         let keepChecking = true;
         const titlesToProcess: string[] = [];
@@ -138,10 +161,16 @@ class App extends React.Component<any> {
           }
           if (keepChecking) {
             titlesToProcess.push(item.snippet.title);
-            descriptionsToProcess.push(item.snippet.title);
-            videoPublishDatesToProcess.push(item.snippet.title);
-            thumbnailLinksToProcess.push(item.snippet.title);
-            videosIdsToProcess.push(item.snippet.title);
+            descriptionsToProcess.push(item.snippet.description);
+
+            const date = item.snippet.publishedAt.substring(0, 10);
+            videoPublishDatesToProcess.push(date);
+
+            console.log(date);
+            
+
+            thumbnailLinksToProcess.push(item.snippet.thumbnails.medium.url);
+            videosIdsToProcess.push(item.snippet.resourceId.videoId);
           }
         });
 
@@ -155,10 +184,7 @@ class App extends React.Component<any> {
           source: titlesToProcess,
           toCompareWith: combinedUniqueIndexes
         });
-        const keepTheseDescriptions: string[] = compareAndKeep({
-          source: descriptionsToProcess,
-          toCompareWith: combinedUniqueIndexes
-        });
+
         const keepTheseThumbnailLinks: string[] = compareAndKeep({
           source: thumbnailLinksToProcess,
           toCompareWith: combinedUniqueIndexes
@@ -169,21 +195,88 @@ class App extends React.Component<any> {
           toCompareWith: combinedUniqueIndexes
         });
 
+        const videoLinks: string[] = [];
+
+        keepTheseVideoIds.forEach((videoId: string) => {
+          const link: string = `https://www.youtube.com/watch?v=${videoId}`;
+          videoLinks.push(link);
+        });
+
         const keepTheseVideoPublishDates: string[] = compareAndKeep({
           source: videoPublishDatesToProcess,
           toCompareWith: combinedUniqueIndexes
         });
 
-        console.log(keepTheseDescriptions, combinedUniqueIndexes);
+        newSubscriptions.push([keepTheseTitles, videoLinks, keepTheseVideoPublishDates, keepTheseThumbnailLinks]);
+        // change each inner array with the below mentioned variables----
+        //keepTheseTitles
+
+        //videoLinks
+        //keepTheseVideoPublishDates
+        //keepTheseThumbnailLinks
+
+
+
+        
       });
+
+      newSubscriptionForMultipleChannels.push(newSubscriptions);
+
+      // update each query's lookedUpToVidTag here...
+      query.details = newDetailsArr;
+      delete query.subscriptionNo;
+      this.dbWriteHelper(refToDb, 'query', query);
+      
     }
+    console.log(newSubscriptionForMultipleChannels);
+
+
+    const allSubscriptions = await dbReader(refToDb, 'subscription');
+
+    allSubscriptions.forEach((channelSubscriptionObj: any, channelSubscriptionObjIndex: number) => {
+      channelSubscriptionObj.unseenVideoTitles.forEach((titleArr: string[], titleArrIndex: number) => {
+        titleArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][titleArrIndex][0]);
+        
+      });
+      channelSubscriptionObj.videoLinks.forEach((videoLinkArr: string[], videoLinkArrIndex: number) => {
+        videoLinkArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoLinkArrIndex][1]);
+        
+      });
+
+      channelSubscriptionObj.videoUploadTime.forEach((videoUploadTimeArr: string[], videoUploadTimeIndex: number) => {
+        videoUploadTimeArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoUploadTimeIndex][2]);
+        
+      });
+      channelSubscriptionObj.videoThumbnailLinks.forEach((videoThumbnailLinksArr: string[], videoThumbnailLinksArrIndex: number) => {
+        videoThumbnailLinksArr.push(...newSubscriptionForMultipleChannels[channelSubscriptionObjIndex][videoThumbnailLinksArrIndex][3]);
+        
+      });
+    });
+    
+    console.log(allSubscriptions);
+
+    this.dbWriteHelper(refToDb, 'subscription', allSubscriptions);
+    
+
+    reloadSvg.classList.remove('rotate');
   }
 
-  public async dbWriteHelper(dbRef: any, objStore: string, obj: any) {
+  public async dbWriteHelper(dbRef: any, objStore: string, data: any) {
     try {
       const ref = await dbRef;
-      await dbWriter(ref, objStore, obj);
+      
+      if (Array.isArray(data)) {
+        for (const oneData of data) {
+        await dbWriter(ref, objStore, oneData);
+        }
+      }  else {
+
+        
+        await dbWriter(ref, objStore, data);
+      }
     } catch (error) {
+      console.log(error);
+      
       this.props.dispatch({
         type: `showError`
       });
@@ -399,7 +492,7 @@ class App extends React.Component<any> {
           <div>
             {renderThis}
             <button id="reload-subscriptions" onClick={this.reloadSubscriptions}>
-              <FontAwesomeIcon icon={faSyncAlt} className="rotate" />
+              <FontAwesomeIcon icon={faSyncAlt} />
             </button>
           </div>
         );

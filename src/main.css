@@ -78,7 +78,7 @@ em {
 }
 
 .rotate {
-  animation: rotation 1.75s infinite linear;
+  animation: rotation 1s infinite linear;
 }
 
 @keyframes rotation {

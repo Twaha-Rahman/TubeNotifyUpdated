@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './EmptyComponent.css';
-import { ReactComponent as Logo } from '../../media/image/empty.svg';
 
 interface IEmptyComponentProps {
   text?: string;
