@@ -17,7 +17,6 @@ import dbWriter from '../../utilities/dbWriter';
 import isArraysEqual from '../../utilities/isArraysEqual';
 
 import Loading from '../../components/Loading/Loading';
-//tslint:disable
 class Selector extends React.Component<any> {
   constructor(props: any) {
     super(props); // store and route is in the props

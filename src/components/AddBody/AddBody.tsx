@@ -4,14 +4,16 @@ import { faArrowRight, faPaste } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button/Button';
 
 interface IAddBodyProps {
-  refToThis: any;
+  refToSubmitter: any;
   useCase: string;
   mainText: string;
   inputFieldText: string;
+  inputVal?: string;
 }
 
 const AddBody: React.SFC<IAddBodyProps> = props => {
   let instruction: any;
+  let inputParts: any;
   let inputTextId: string = '';
   if (props.useCase === 'link') {
     instruction = (
@@ -39,7 +41,9 @@ const AddBody: React.SFC<IAddBodyProps> = props => {
         </p>
       </div>
     );
-  } else {
+  }
+
+  if (props.useCase === 'keyword') {
     inputTextId = 'input-key-word';
     instruction = (
       <div className="instruction-container">
@@ -63,33 +67,79 @@ const AddBody: React.SFC<IAddBodyProps> = props => {
       </div>
     );
   }
-  return (
-    <div className="wrapper">
-      <h1>{props.mainText}</h1>
-      <input
-        id="input"
-        className={inputTextId}
-        type="text"
-        placeholder={props.inputFieldText}
-        onKeyUp={(event: any) => {
-          const btnRef: any = document.getElementById('click-this');
-          if (event.keyCode === 13) {
-            event.preventDefault();
-            btnRef.click();
-          }
-        }}
-      />
 
-      <div id="input-msg-container">
-        <span id="input-msg">The link you have entered is not valid!</span>
+  if (props.useCase === 'shared') {
+    instruction = (
+      <div className="instruction-container">
+        <h5>Do you want to continue with the shared link??</h5>
+        <p>
+          TubeNotify has detected a link and can use it to create a subscruption. If you want to proceed, then press the
+          'Next' button.
+        </p>
       </div>
+    );
 
-      <br />
-      {instruction}
+    inputParts = (
+      <div className="wrapper">
+        <h1>{props.mainText}</h1>
+        <input
+          id="input"
+          className={inputTextId}
+          type="text"
+          defaultValue={props.inputVal}
+          placeholder={props.inputFieldText}
+          onKeyUp={(event: any) => {
+            const btnRef: any = document.getElementById('click-this');
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              btnRef.click();
+            }
+          }}
+        />
 
-      <Button clickHandler={props.refToThis.submitter} buttonIcon={faArrowRight} buttonMessage="Next" />
-    </div>
-  );
+        <div id="input-msg-container">
+          <span id="input-msg">The link you have entered is not valid!</span>
+        </div>
+
+        <br />
+        {instruction}
+
+        <Button clickHandler={props.refToSubmitter} buttonIcon={faArrowRight} buttonMessage="Next" />
+      </div>
+    );
+  }
+
+  if (props.useCase !== 'shared') {
+    inputParts = (
+      <div className="wrapper">
+        <h1>{props.mainText}</h1>
+        <input
+          id="input"
+          className={inputTextId}
+          type="text"
+          placeholder={props.inputFieldText}
+          onKeyUp={(event: any) => {
+            const btnRef: any = document.getElementById('click-this');
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              btnRef.click();
+            }
+          }}
+        />
+
+        <div id="input-msg-container">
+          <span id="input-msg">The link you have entered is not valid!</span>
+        </div>
+
+        <br />
+        {instruction}
+
+        <Button clickHandler={props.refToSubmitter} buttonIcon={faArrowRight} buttonMessage="Next" />
+      </div>
+    );
+  }
+
+  return inputParts;
 };
 
 export default AddBody;

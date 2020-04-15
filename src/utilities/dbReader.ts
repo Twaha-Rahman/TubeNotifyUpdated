@@ -5,8 +5,6 @@ async function dbReader(refToDB: any, objectStore: any, id?: any) {
 
     let data;
 
-    //tslint:disable
-
     if (id) {
       data = await tx.objectStore(objectStore).get(id);
     } else {

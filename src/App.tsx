@@ -304,7 +304,7 @@ class App extends React.Component<any> {
     data.videoLinks.forEach((videoLinkArr: string[], videoLinkArrIndex: number) => {
       toKeep.push([]);
       videoLinkArr.forEach((vidLink: string) => {
-        //tslint:disable
+
         if (link === vidLink) {
           toKeep[videoLinkArrIndex].push(false);
         } else {

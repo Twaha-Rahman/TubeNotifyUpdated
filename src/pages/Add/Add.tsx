@@ -13,7 +13,6 @@ import multipleStoreCommits from '../../utilities/multipleStoreCommits';
 class Add extends React.Component<any> {
   constructor(props: any) {
     super(props); // store and route is in the props
-
     this.submitter = this.submitter.bind(this);
     this.props.dispatch({
       type: `stepInc`
@@ -49,8 +48,8 @@ class Add extends React.Component<any> {
           refToInputMsg.style.display = `flex`;
         } else {
           const ytId = inputLinkParts[inputLinkParts.length - 1];
-          let firstLink = '';
-          //tslint:disable
+          let firstLink: string;
+
           if (inputLinkParts[inputLinkParts.length - 2] === 'channel') {
             firstLink = linkGenerator({ id: ytId, type: `channels`, part: `contentDetails, snippet` });
           } else {
@@ -61,8 +60,8 @@ class Add extends React.Component<any> {
             type: `showLoader`
           });
           fetch(firstLink)
-            .then(firstLinkResponse => {
-              firstLinkResponse.json().then(firstLinkData => {
+            .then((firstLinkResponse: any) => {
+              firstLinkResponse.json().then((firstLinkData: any) => {
                 const channelLogoLink = firstLinkData.items[0].snippet.thumbnails.default.url;
                 if (firstLinkData.items.length === 0) {
                   this.props.dispatch({
@@ -256,28 +255,43 @@ class Add extends React.Component<any> {
   public render() {
     let renderThis;
     if (this.props.store.errorToggler) {
-      renderThis = <Redirect to="/error" />;
+      return <Redirect to="/error" />;
     }
     if (this.props.store.showLoader) {
       renderThis = <Loading />;
     }
     if (!this.props.store.showLoader) {
-      renderThis = (
-        <AddBody
-          refToThis={this}
-          useCase="link"
-          mainText="Enter the link :"
-          inputFieldText="Type or paste your link here"
-        />
-      );
+      const sharedLink = new URLSearchParams(this.props.location.search).get('url');
+      if (sharedLink !== null) {
+        // use the link to go to the next step....
+
+        renderThis = (
+          <AddBody
+            refToSubmitter={this.submitter}
+            inputVal={sharedLink}
+            useCase="shared"
+            mainText="Enter the link"
+            inputFieldText="Type or paste your link here"
+          />
+        );
+      } else {
+        renderThis = (
+          <AddBody
+            refToSubmitter={this.submitter}
+            useCase="link"
+            mainText="Enter the link"
+            inputFieldText="Type or paste your link here"
+          />
+        );
+      }
     }
 
     if (this.props.store.stepCounter === 2) {
       renderThis = (
         <AddBody
-          refToThis={this}
+          refToSubmitter={this.submitter}
           useCase="keyword"
-          mainText="Enter key-word :"
+          mainText="Enter key-word"
           inputFieldText="Type your key-word here"
         />
       );

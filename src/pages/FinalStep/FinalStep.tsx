@@ -7,16 +7,9 @@ import * as Router from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import urlBase64ToUint8Array from '../../utilities/urlBase64ToUint8Array';
-import publicVapidKey from '../../api_keys/publicVapidKey';
-import EmptyComponent from '../../components/EmptyComponent/EmptyComponent';
 import { ReactComponent as Logo } from '../../media/image/success.svg';
 
 class FinalStep extends React.Component<any> {
-  constructor(props: any) {
-    super(props); // store and route is in the props
-  }
-
   public componentWillUnmount() {
     this.props.dispatch({
       type: 'eraseAdditionalInfo'
