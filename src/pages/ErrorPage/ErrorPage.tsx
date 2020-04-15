@@ -22,6 +22,9 @@ class ErrorPage extends React.Component<any> {
     this.props.dispatch({
       type: 'eraseAdditionalInfo'
     });
+    this.props.dispatch({
+      type: 'eraseSubscriptions'
+    });
   }
 }
 
