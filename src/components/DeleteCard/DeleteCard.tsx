@@ -70,7 +70,7 @@ const DeleteCard: React.SFC<IDeleteCardProps> = props => {
   return (
     <div className="delete-card-container">
       <div className="delete-card-top">
-        <img src={props.channelLogoLink} className="unselectable" />
+        <img src={props.channelLogoLink} alt="Channel Logo" className="unselectable" />
         <h3>{props.channelName}</h3>
         <span
           onClick={async () => {

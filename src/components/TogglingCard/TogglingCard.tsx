@@ -44,7 +44,7 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
             window.open(props.videoLinks[index], '_blank');
           }}
         >
-          <img src={props.videoThumbnailLinks[index]} />
+          <img src={props.videoThumbnailLinks[index]} alt="Thumbnail" />
 
           <div className="collapsible-card-item-info-container">
             <h3>{data}</h3>
@@ -64,8 +64,6 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
             </button>
             <button
               onClick={(e: any) => {
-                const selectedNode = e.target;
-
                 props.forceUpdater();
               }}
             >
@@ -79,7 +77,7 @@ const TogglingCard: React.SFC<ITogglingCardProps> = props => {
   return (
     <div className="collapsible-card">
       <div className="collapsible-card-title" onClick={props.togglingFunction}>
-        <img src={props.channelLogoLink} className="unselectable" />
+        <img src={props.channelLogoLink} alt="Thumbnail" className="unselectable" />
 
         <h5>{props.title}</h5>
         <FontAwesomeIcon className="drop-icon" icon={faChevronDown} />

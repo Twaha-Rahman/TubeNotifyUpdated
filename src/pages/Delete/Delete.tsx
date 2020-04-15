@@ -5,7 +5,6 @@ import './Delete.css';
 import DeleteCard from '../../components/DeleteCard/DeleteCard';
 import refToDb from '../../utilities/dbOpener';
 import dbReader from '../../utilities/dbReader';
-import dbWritter from '../../utilities/dbWriter';
 import { Redirect } from 'react-router';
 import EmptyComponent from '../../components/EmptyComponent/EmptyComponent';
 import { ReactComponent as Logo } from '../../media/image/empty.svg';

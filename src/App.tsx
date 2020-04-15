@@ -84,7 +84,7 @@ class App extends React.Component<any> {
           }
         });
       })
-      .catch(() => {
+      .catch((err) => {
         this.props.dispatch({
           type: `showError`
         });

@@ -405,7 +405,7 @@ class Selector extends React.Component<any> {
           });
         });
 
-      const oldThumbnailLinksToKeep: any = dbReader(refToDb, 'cache-keep', 1)
+      dbReader(refToDb, 'cache-keep', 1)
         .then(res => {
           let newThumbnailLinksToKeep: string[] = [];
           if (res) {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './AddBody.css';
-import { faArrowRight, faPaste } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button/Button';
 
 interface IAddBodyProps {

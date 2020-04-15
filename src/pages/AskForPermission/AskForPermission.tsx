@@ -4,7 +4,6 @@ import mapStateToProps from '../../utilities/mapStateToProp';
 import './AskForPermission.css';
 import { Redirect } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../media/image/notification.svg';
-import EmptyComponent from '../../components/EmptyComponent/EmptyComponent';
 import Button from '../../components/Button/Button';
 import { faPowerOff, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';

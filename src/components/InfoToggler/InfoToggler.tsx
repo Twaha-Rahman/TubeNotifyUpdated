@@ -11,8 +11,6 @@ interface IInfoTogglerProps {
 const InfoToggler: React.SFC<IInfoTogglerProps> = props => {
   let renderElements: any;
   if (props.isSelected) {
-    // const backgroundColor = '#28d8b5';
-
     renderElements = (
       <div
         className="info-card"
@@ -21,14 +19,14 @@ const InfoToggler: React.SFC<IInfoTogglerProps> = props => {
           filter: 'blur(4.5px)'
         }}
       >
-        <img className="card-img" src={props.imgLink} />
+        <img className="card-img" src={props.imgLink} alt="Thumbnail" />
         <h1 id={props.num.toString()}>{props.title}</h1>
       </div>
     );
   } else {
     renderElements = (
       <div className="info-card" id={props.num.toString()}>
-        <img className="card-img" src={props.imgLink} />
+        <img className="card-img" src={props.imgLink} alt="Thumbnail" />
         <h1 id={props.num.toString()}>{props.title}</h1>
       </div>
     );
