@@ -9,6 +9,10 @@ import { faPowerOff, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import urlBase64ToUint8Array from '../../utilities/urlBase64ToUint8Array';
 import publicVapidKey from '../../api_keys/publicVapidKey';
+import dbWriter from '../../utilities/dbWriter';
+import refToDb from '../../utilities/dbOpener';
+import Loading from '../../components/Loading/Loading';
+import dbReader from '../../utilities/dbReader';
 
 class AskForPermission extends React.Component<any> {
   constructor(props: any) {
@@ -18,6 +22,10 @@ class AskForPermission extends React.Component<any> {
   }
 
   public pushNotificationSetter(refToRegistration: any) {
+    this.props.dispatch({
+      type: 'showLoader'
+    });
+
     refToRegistration.pushManager
       .subscribe({
         userVisibleOnly: true,
@@ -31,12 +39,68 @@ class AskForPermission extends React.Component<any> {
             'content-type': 'application/json'
           }
         })
-          .then(() => {
-            this.props.dispatch({
-              type: 'hasSubscription'
+          .then((resObj: any) => {
+            throw new Error('fdsfffsdfsdf');
+
+            resObj.json().then((data: any) => {
+              console.log(data);
+
+              if (data.uid) {
+                // recieved uid.....save it to idb
+
+                const generalObj = {
+                  uid: data.uid
+                };
+
+                dbWriter(refToDb, 'general', generalObj).catch(() => {
+                  this.props.dispatch({
+                    type: `showError`
+                  });
+                });
+
+                dbReader(refToDb, 'query')
+                  .then((queries: any) => {
+                    const queryObjToSend = {
+                      uid: data.uid,
+                      queries
+                    };
+                    fetch('http://localhost:3005/api/query', {
+                      method: 'POST',
+                      body: JSON.stringify(queryObjToSend),
+                      headers: {
+                        'content-type': 'application/json'
+                      }
+                    })
+                      .then(err => {
+                        console.log(err);
+                        this.props.dispatch({
+                          type: `hideLoader`
+                        });
+                      })
+                      .catch(err => {
+                        console.log(err);
+
+                        this.props.dispatch({
+                          type: `showError`
+                        });
+                      });
+                  })
+                  .catch(err => {
+                    console.log(err);
+
+                    this.props.dispatch({
+                      type: `showError`
+                    });
+                  });
+              }
+              this.props.dispatch({
+                type: 'hasSubscription'
+              });
             });
           })
-          .catch(() => {
+          .catch(err => {
+            console.log(err);
+
             this.props.dispatch({
               type: `showError`
             });
@@ -49,8 +113,12 @@ class AskForPermission extends React.Component<any> {
       return <Redirect to="/error" />;
     }
 
-    if (this.props.store.hasSubscription) {
+    if (this.props.store.hasSubscription && !this.props.store.showLoader) {
       return <Redirect to="/final" />;
+    }
+
+    if (this.props.store.showLoader) {
+      return <Loading />;
     }
 
     return (
@@ -111,7 +179,7 @@ class AskForPermission extends React.Component<any> {
           buttonIcon={faPowerOff}
         />
         <Link to="/">
-          <Button buttonMessage="Cancel" buttonIcon={faTimes} />
+          <Button buttonMessage="Don't Enable Notification" buttonIcon={faTimes} />
         </Link>
       </div>
     );

@@ -25,7 +25,6 @@ async function refreshSubscription(dbWriteHelper: any, refToReloadButton: any) {
     const unparsedData = await fetch(link);
     const data = await unparsedData.json();
 
-    console.log(data);
     const newLookedUpToThisVideoTag: string = data.items[0].snippet.resourceId.videoId;
     const newDetailsArr: any[] = [];
 
@@ -50,8 +49,6 @@ async function refreshSubscription(dbWriteHelper: any, refToReloadButton: any) {
 
           const date = item.snippet.publishedAt.substring(0, 10);
           videoPublishDatesToProcess.push(date);
-
-          console.log(date);
 
           thumbnailLinksToProcess.push(item.snippet.thumbnails.medium.url);
           videosIdsToProcess.push(item.snippet.resourceId.videoId);
@@ -102,7 +99,6 @@ async function refreshSubscription(dbWriteHelper: any, refToReloadButton: any) {
     delete query.subscriptionNo;
     dbWriteHelper(refToDb, 'query', query);
   }
-  console.log(newSubscriptionForMultipleChannels);
 
   const allSubscriptions = await dbReader(refToDb, 'subscription');
 
@@ -130,8 +126,6 @@ async function refreshSubscription(dbWriteHelper: any, refToReloadButton: any) {
       }
     );
   });
-
-  console.log(allSubscriptions);
 
   dbWriteHelper(refToDb, 'subscription', allSubscriptions);
   refToReloadButton.classList.remove('rotate');
